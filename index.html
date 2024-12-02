@@ -181,6 +181,7 @@
     <script>
         let tableCount = 0;
         let totalSum = 0;
+        
 
         // Hàm thêm bảng mới
         function addTable() {
@@ -293,7 +294,7 @@
                 });
                 doc.text(totalDisplay, 10, y); // Thêm tổng bảng
                 y += 15;
-                doc.text('------------------------------', 10, y); // Đường kẻ phân cách
+                doc.text('----------------------------------------------', 10, y); // Đường kẻ phân cách
                 y += 10;
             });
 
@@ -305,6 +306,26 @@
             // Lưu PDF
             doc.save('calculator_output.pdf');
         }
+
+        // Hàm để kiểm tra trước khi reload trang
+        function checkBeforeReload() {
+            // Hiển thị cảnh báo cho người dùng
+            const userConfirmed = window.confirm("Bạn có chắc chắn muốn tải lại trang? Tất cả dữ liệu chưa lưu sẽ bị mất.");
+            
+            // Nếu người dùng nhấn "OK" (Đồng ý), reload trang
+            if (userConfirmed) {
+                window.location.reload(); // Reload trang
+            } else {
+                console.log("Người dùng đã hủy reload trang.");
+            }
+        }
+
+        // Gắn sự kiện trước khi reload trang hoặc F5
+        window.addEventListener('beforeunload', function(event) {
+            event.preventDefault(); // Hủy hành động reload mặc định
+            checkBeforeReload(); // Gọi hàm kiểm tra reload
+        });
+
     </script>
 
 </body>
