@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ứng Dụng Máy Tính</title>
+    <!-- Thêm Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEJ6H2XqU/RHtG5QH0HkB4vH2UyA4Fpyb6xfz7lb9nL2vAZO6w2bPbShSf4s2nd" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet"> <!-- Thêm Bootstrap Icons -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensure the body takes up the full height of the screen */
+        }
+
+        /* Nội dung chính */
+        .content {
+            flex: 1; /* Ensure the content grows to take the available space */
+            padding: 20px;
+        }
+
+        .table-container {
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: #fff;
+        }
+
+        .table-header {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .table {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .table input {
+            padding: 10px;
+            font-size: 16px;
+            width: 100%;
+            text-align: right;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        .table .total-display {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .total {
+            font-size: 24px;
+            margin-top: 30px;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border: 2px solid #007bff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #totalSum {
+            font-size: 36px;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        .add-table-btn {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            width: 60px;
+            height: 60px;
+            font-size: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .add-table-btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Footer styling */
+        footer {
+            background-color: #343a40;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            font-size: 14px;
+            margin-top: auto; /* Ensure the footer is always at the bottom */
+        }
+
+        /* CSS cho nút Export to PDF */
+        .export-pdf-btn {
+            margin-top: 20px;
+            padding: 12px 24px;  /* Cung cấp khoảng cách xung quanh chữ */
+            font-size: 16px;  /* Kích thước chữ */
+            background-color: #28a745; /* Màu nền của nút */
+            color: white;  /* Màu chữ */
+            border: none;  /* Không có viền */
+            border-radius: 8px;  /* Bo tròn các góc */
+            cursor: pointer;  /* Hiển thị con trỏ chuột là tay khi hover */
+            transition: background-color 0.3s, transform 0.2s; /* Hiệu ứng chuyển đổi khi hover */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Đổ bóng cho nút */
+        }
+
+        .export-pdf-btn:hover {
+            background-color: #218838; /* Màu nền khi hover */
+            transform: translateY(-2px); /* Tạo hiệu ứng nâng lên khi hover */
+        }
+
+        .export-pdf-btn:active {
+            transform: translateY(1px); /* Tạo hiệu ứng nhấn xuống khi click */
+        }
+
+        .export-pdf-btn i {
+            margin-right: 8px; /* Khoảng cách giữa biểu tượng và chữ */
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="content">
+        <h1>Ứng Dụng Máy Tính</h1>
+
+        <div id="tables">
+            <!-- Các bảng sẽ được thêm vào đây -->
+        </div>
+
+        <!-- Nút thêm bảng mới với biểu tượng dấu cộng -->
+        <button class="btn btn-primary rounded-circle add-table-btn" onclick="addTable()">
+            <i class="bi bi-plus"></i> <!-- Biểu tượng dấu cộng -->
+        </button>
+
+        <div class="total">
+            <strong>Tổng Cộng: </strong><span id="totalSum">0</span>
+        </div>
+
+        <!-- Export to PDF button -->
+        <button class="btn export-pdf-btn mt-4" onclick="exportToPDF()">
+            <i class="bi bi-file-earmark-pdf"></i> <!-- Thêm biểu tượng PDF -->
+            Export to PDF
+        </button>
+    </div>
+
+    <footer>
+        <p>Copyright © by DatDev</p>
+    </footer>
+
+    <!-- Include jsPDF Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <script>
+        let tableCount = 0;
+        let totalSum = 0;
+
+        // Hàm thêm bảng mới
+        function addTable() {
+            tableCount++;
+            const tableContainer = document.createElement('div');
+            tableContainer.classList.add('table-container');
+            tableContainer.id = 'table-' + tableCount;
+
+            const header = document.createElement('div');
+            header.classList.add('table-header');
+            header.innerText = `Bảng ${tableCount}`;
+            tableContainer.appendChild(header);
+
+            const table = document.createElement('div');
+            table.classList.add('table');
+
+            // Tạo các ô nhập liệu cho 5 số
+            for (let i = 0; i < 5; i++) {
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.placeholder = `Số ${i + 1}`;
+                input.id = 'input-' + tableCount + '-' + i;
+                input.oninput = function() { 
+                    updateTableTotal(tableCount);  // Gọi hàm tính tổng khi thay đổi dữ liệu
+                    updateAllTableTotals();        // Gọi hàm cập nhật tất cả tổng bảng
+                };
+                input.inputMode = 'numeric';  // Thêm thuộc tính inputmode để hiển thị bàn phím số
+                table.appendChild(input);
+            }
+
+            // Trường hiển thị tổng của bảng sau số thứ 5
+            const totalDisplay = document.createElement('div');
+            totalDisplay.classList.add('total-display');
+            totalDisplay.id = 'total-display-' + tableCount;
+            totalDisplay.innerText = 'Tổng Bảng: 0';
+            table.appendChild(totalDisplay);
+
+            // Thêm bảng vào phần tử chứa
+            tableContainer.appendChild(table);
+            document.getElementById('tables').appendChild(tableContainer);
+
+            // Cập nhật tổng cho tất cả các bảng (bao gồm cả bảng mới và bảng cũ)
+            updateAllTableTotals();
+            // Cập nhật lại tổng cộng của toàn bộ các bảng
+            updateTotalSum();
+        }
+
+        // Hàm cập nhật tổng cho tất cả các bảng
+        function updateAllTableTotals() {
+            const tables = document.querySelectorAll('.table-container');
+            tables.forEach(tableContainer => {
+                const tableId = tableContainer.id.split('-')[1];
+                updateTableTotal(tableId);
+            });
+        }
+
+        // Hàm cập nhật tổng của bảng khi thay đổi ô nhập liệu
+        function updateTableTotal(tableId) {
+            let sum = 0;
+            for (let i = 0; i < 5; i++) {
+                const input = document.getElementById('input-' + tableId + '-' + i);
+                const value = parseFloat(input.value) || 0;
+                sum += value;
+            }
+            updateTableTotalDisplay(sum, tableId);
+            updateTotalSum();
+        }
+
+        // Cập nhật tổng của bảng và hiển thị
+        function updateTableTotalDisplay(sum, tableId) {
+            document.getElementById('total-display-' + tableId).innerText = `Tổng Bảng: ${sum}`;
+        }
+
+        // Cập nhật tổng cộng toàn bộ bảng
+        function updateTotalSum() {
+            totalSum = 0;
+            const tables = document.querySelectorAll('.table-container');
+            tables.forEach(tableContainer => {
+                const tableId = tableContainer.id.split('-')[1];
+                let tableTotal = 0;
+                for (let i = 0; i < 5; i++) {
+                    const input = document.getElementById('input-' + tableId + '-' + i);
+                    const value = parseFloat(input.value) || 0;
+                    tableTotal += value;
+                }
+                totalSum += tableTotal;
+            });
+            document.getElementById('totalSum').innerText = totalSum;
+        }
+
+        // Hàm xuất PDF
+        function exportToPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            let y = 10;
+
+            // Duyệt qua tất cả các bảng và thêm vào PDF
+            const tables = document.querySelectorAll('.table-container');
+            tables.forEach(tableContainer => {
+                const tableHeader = tableContainer.querySelector('.table-header').innerText;
+                const totalDisplay = tableContainer.querySelector('.total-display').innerText;
+
+                doc.setFontSize(12);
+                doc.text(tableHeader, 10, y); // Thêm tiêu đề bảng
+                y += 10;
+                const inputs = tableContainer.querySelectorAll('input');
+                inputs.forEach(input => {
+                    doc.text(input.value || '0', 10, y); // Thêm các giá trị ô nhập liệu
+                    y += 10;
+                });
+                doc.text(totalDisplay, 10, y); // Thêm tổng bảng
+                y += 15;
+                doc.text('------------------------------', 10, y); // Đường kẻ phân cách
+                y += 10;
+            });
+
+            // Thêm tổng cộng vào cuối
+            doc.setFontSize(14);
+            doc.text('Tong cong: ' + totalSum, 10, y);
+            y += 10;
+
+            // Lưu PDF
+            doc.save('calculator_output.pdf');
+        }
+    </script>
+
+</body>
+</html>
