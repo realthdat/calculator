@@ -287,8 +287,28 @@
 
             let y = 10;
             const margin = 10;
+            const pageWidth = doc.internal.pageSize.width;
             const pageHeight = doc.internal.pageSize.height;
             const lineHeight = 10;
+
+            doc.setFontSize(28);
+            const title = 'Phiếu cân Cà phê';
+
+            const titleWidth = doc.getTextWidth(title); // Lấy chiều rộng của tiêu đề
+            const titleX = (pageWidth - titleWidth) / 2; // Tính vị trí x để căn giữa
+            doc.text(title, titleX, y); // Thêm tiêu đề vào giữa
+            y += 15; // Tăng y để xuống dòng
+
+            // Lấy ngày giờ hiện tại
+            const now = new Date();
+            const formattedDate = now.toLocaleDateString('vi-VN');
+            const formattedTime = now.toLocaleTimeString('vi-VN');
+
+            // Hiển thị ngày giờ hiện tại
+            doc.setFontSize(14);
+            doc.text(`Thời gian thực hiện: ${formattedTime} ${formattedDate}`, margin, y);
+            y += 40;
+
 
             // Duyệt qua tất cả các bảng và thêm vào PDF
             const tables = document.querySelectorAll('.table-container');
